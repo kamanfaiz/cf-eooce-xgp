@@ -1,6 +1,9 @@
 # eooce老王小钢炮可视化界面
 
-核心脚本作者是 [老王eooce](https://github.com/eooce)
+核心脚本作者是`老王eooce`
+Github地址：https://github.com/eooce
+Youtube地址：https://www.youtube.com/@eooce
+Telegram地址：https://t.me/eooceu
 
 ## 部署到 Cloudflare Workers
 
