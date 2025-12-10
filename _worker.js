@@ -2,18 +2,6 @@
  * ============================================================================
  * Cloudflare Worker - eooce 小钢炮配置生成器
  * ============================================================================
- * 
- * 功能说明：
- * - 提供一个可视化的 Web 界面，用于生成 eooce 小钢炮的安装命令
- * - 支持配置：基础设置、CF优选、哪吒监控、Argo隧道、直连端口、订阅等
- * 
- * 文件结构：
- * 1. 配置区域 - 可自定义的常量配置
- * 2. HTML 模板 - 页面结构
- * 3. CSS 样式 - 页面样式（按功能分组）
- * 4. JavaScript - 交互逻辑（按功能分组）
- * 5. Worker 导出 - Cloudflare Worker 入口
- * ============================================================================
  */
 
 // ============================================================================
@@ -128,6 +116,12 @@ function generateStyles() {
       color: #fff;
     }
     
+    /* 头部按钮文字间距 */
+    .clear-btn .btn-text,
+    .paste-btn .btn-text {
+      margin-left: 4px;
+    }
+    
     /* ==================== 网格布局 ==================== */
     .grid {
       display: grid;
@@ -144,6 +138,48 @@ function generateStyles() {
     @media (max-width: 768px) {
       .grid { grid-template-columns: 1fr; }
       .sunlight { width: 250px; height: 250px; }
+      
+      /* 头部区域改为垂直布局 */
+      .header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+      
+      /* 按钮组移到标题下方 */
+      .header-btns {
+        position: static;
+        transform: none;
+        justify-content: center;
+      }
+      
+      /* 底部栏自适应缩放，保持一行且居中显示全 */
+      .footer {
+        font-size: 13px !important;
+        white-space: nowrap;
+        padding: 10px 5px;
+        text-align: center;
+        width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: 3px;
+      }
+      
+      .footer a {
+        font-size: 13px !important;
+        margin: 0 1px;
+        white-space: nowrap;
+      }
+      
+      .footer .iconfont {
+        font-size: 13px !important;
+        margin-right: 2px !important;
+      }
     }
     
     /* ==================== 配置区块样式 ==================== */
@@ -270,17 +306,20 @@ function generateStyles() {
       font-size: 18px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.15s ease;
       box-shadow: 0 4px 15px rgba(92, 107, 192, 0.3);
     }
     
     .btn:hover {
-      transform: translateY(-2px);
+      transform: translateY(-2px) scale(1.02);
       box-shadow: 0 8px 25px rgba(92, 107, 192, 0.4);
     }
     
     .btn:active {
-      transform: translateY(0);
+      transform: scale(0.95);
+      box-shadow: 0 2px 8px rgba(92, 107, 192, 0.3);
+      background: linear-gradient(135deg, #d32f2f, #3949ab);
+      filter: brightness(0.9);
     }
     
     .btn-sm {
@@ -323,8 +362,9 @@ function generateStyles() {
     /* ==================== 底部栏 ==================== */
     .footer {
       padding: 12px 20px;
-      color: #ffffffff;
-      font-size: 14px;
+      color: #f1f3f7ff;
+      font-size: 16px;
+      font-weight: 600;
       text-align: center;
       margin-top: 20px;
     }
@@ -435,8 +475,8 @@ function generateHTML() {
     <div class="header">
       <h1>🚀 eooce 王之钢炮</h1>
       <div class="header-btns">
-        <button class="clear-btn" onclick="clearAll()"><i class="iconfont icon-yiqingchugaojing" style="margin-right:4px;"></i>清除</button>
-        <button class="paste-btn" onclick="pasteNezha()"><i class="iconfont icon-paste" style="margin-right:4px;"></i>哪吒命令导入</button>
+        <button class="clear-btn" onclick="clearAll()"><i class="iconfont icon-yiqingchugaojing"></i><span class="btn-text">清除</span></button>
+        <button class="paste-btn" onclick="pasteNezha()"><i class="iconfont icon-paste"></i><span class="btn-text">哪吒命令导入</span></button>
       </div>
     </div>
     
@@ -895,21 +935,26 @@ function generateScripts() {
       try {
         const text = await navigator.clipboard.readText();
         
-        // 解析 NZ_SERVER
-        const serverMatch = text.match(/NZ_SERVER=([^\\s]+)/);
-        if (serverMatch) {
+        // 如果剪贴板为空或不包含哪吒相关配置，直接返回
+        if (!text || !text.includes('NZ_')) {
+          return;
+        }
+        
+        // 解析 NZ_SERVER (匹配非空格字符)
+        const serverMatch = text.match(/NZ_SERVER=([^ \\n\\r]+)/);
+        if (serverMatch && serverMatch[1]) {
           document.getElementById('nezhaServer').value = serverMatch[1];
         }
         
         // 解析 NZ_CLIENT_SECRET
-        const secretMatch = text.match(/NZ_CLIENT_SECRET=([^\\s]+)/);
-        if (secretMatch) {
+        const secretMatch = text.match(/NZ_CLIENT_SECRET=([^ \\n\\r]+)/);
+        if (secretMatch && secretMatch[1]) {
           document.getElementById('nezhaKey').value = secretMatch[1];
         }
         
         // 解析 NZ_UUID (可选)
-        const uuidMatch = text.match(/NZ_UUID=([^\\s]+)/);
-        if (uuidMatch) {
+        const uuidMatch = text.match(/NZ_UUID=([^ \\n\\r]+)/);
+        if (uuidMatch && uuidMatch[1]) {
           document.getElementById('uuid').value = uuidMatch[1];
         }
         
