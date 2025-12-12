@@ -6,6 +6,9 @@ Github地址：https://github.com/eooce <br>
 Youtube地址：https://www.youtube.com/@eooce <br>
 Telegram地址：https://t.me/eooceu
 
+## 效果展示
+![eooce-xgp](https://imgr2.952536.xyz/Hexo/Article/eooce-xgp.png)
+
 ## 部署到 Cloudflare Workers
 
 1. 登录 [Cloudflare Dashboard](https://dash.cloudflare.com/)
