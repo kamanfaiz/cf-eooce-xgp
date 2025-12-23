@@ -13,7 +13,7 @@ const ICONFONT_CSS = '//at.alicdn.com/t/c/font_5084716_9zqvemc1l0e.css';
 const ICONFONT_JS = '//at.alicdn.com/t/c/font_5084716_9zqvemc1l0e.js';
 
 /** 页面背景图片 URL */
-const BACKGROUND_IMAGE = 'https://imgr2.952536.xyz/Hexo/Wallpaper/forest.png';
+const BACKGROUND_IMAGE = 'https://imgr2.952536.xyz/Hexo/Wallpaper/wallhaven-1q832v.jpg';
 
 /** GitHub 仓库链接 */
 const GITHUB_URL = 'https://github.com/kamanfaiz/cf-eooce-xgp';
@@ -216,7 +216,7 @@ function generateStyles() {
       font-weight: normal !important;
     }
     
-    .section-title .icon-cloudflare2 {
+    .section-title .icon-duankou {
       font-size: 30px;
     }
     
@@ -482,11 +482,11 @@ function generateHTML() {
     
     <div class="grid">
       ${generateBasicConfigSection()}
-      ${generateCFConfigSection()}
       ${generateNezhaConfigSection()}
+      ${generateSubscribeConfigSection()}
       ${generateArgoConfigSection()}
       ${generatePortConfigSection()}
-      ${generateSubscribeConfigSection()}
+      ${generateCFConfigSection()}
       ${generateButtonArea()}
       ${generateResultArea()}
     </div>
@@ -509,7 +509,7 @@ function generateHTML() {
 // ============================================================================
 
 /**
- * 基础配置区块 - 节点名称和 UUID
+ * 基础配置区块 - 节点名称、UUID 和 CF 优选配置
  */
 function generateBasicConfigSection() {
   return `
@@ -528,25 +528,48 @@ function generateBasicConfigSection() {
             <button type="button" class="btn btn-sm" onclick="generateUUID()"><i class="iconfont icon-ziyuan"></i></button>
           </div>
         </div>
-      </div>`;
-}
-
-/**
- * CF 优选配置区块 - 优选域名/IP 和端口
- */
-function generateCFConfigSection() {
-  return `
-      <div class="section">
-        <div class="section-title"><i class="iconfont icon-cloudflare2"></i> CF 优选配置</div>
-        <div class="form-group">
-          <label>CFIP (优选域名/IP)</label>
-          <input type="text" id="cfip" placeholder="默认: cdns.doon.eu.org">
-          <div class="hint">默认值: cdns.doon.eu.org</div>
+        <div class="form-row" style="align-items:flex-start;">
+          <div class="form-group">
+            <label>CFIP (优选域名/IP)</label>
+            <input type="text" id="cfip" placeholder="默认: cdns.doon.eu.org">
+            <div class="hint">默认值: cdns.doon.eu.org</div>
+          </div>
+          <div class="form-group" style="flex:0 0 auto;display:flex;align-items:flex-start;padding-top:28px;">
+            <button type="button" class="btn btn-sm" onclick="randomCFIP()"><i class="iconfont icon-ziyuan"></i></button>
+          </div>
         </div>
         <div class="form-group">
           <label>CFPORT (节点端口)</label>
           <input type="text" id="cfport" placeholder="默认: 443">
           <div class="hint">默认值: 443</div>
+        </div>
+      </div>`;
+}
+
+/**
+ * AnyTls 配置区块 - AnyTls 和 AnyReality 端口
+ */
+function generateCFConfigSection() {
+  return `
+      <div class="section">
+        <div class="section-title"><i class="iconfont icon-duankou"></i> AnyTls 配置</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>ANYTLS_PORT (anytls端口)</label>
+            <input type="text" id="anytlsPort" placeholder="输入端口，留空则不启用">
+          </div>
+          <div class="form-group" style="flex:0 0 auto;display:flex;align-items:flex-end;">
+            <button type="button" class="btn btn-sm" onclick="randomPort('anytlsPort')"><i class="iconfont icon-ziyuan"></i></button>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>ANYREALITY_PORT (anyreality端口)</label>
+            <input type="text" id="anyrealityPort" placeholder="输入端口，留空则不启用">
+          </div>
+          <div class="form-group" style="flex:0 0 auto;display:flex;align-items:flex-end;">
+            <button type="button" class="btn btn-sm" onclick="randomPort('anyrealityPort')"><i class="iconfont icon-ziyuan"></i></button>
+          </div>
         </div>
       </div>`;
 }
@@ -607,7 +630,7 @@ function generateArgoConfigSection() {
 }
 
 /**
- * 直连端口配置区块 - HY2、Reality、TUIC 端口
+ * 直连端口配置区块 - HY2、Reality、TUIC、Socks5 端口
  */
 function generatePortConfigSection() {
   return `
@@ -638,6 +661,15 @@ function generatePortConfigSection() {
           </div>
           <div class="form-group" style="flex:0 0 auto;display:flex;align-items:flex-end;">
             <button type="button" class="btn btn-sm" onclick="randomPort('tuicPort')"><i class="iconfont icon-ziyuan"></i></button>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>S5_PORT (socks5)</label>
+            <input type="text" id="s5Port" placeholder="输入端口，留空则不启用">
+          </div>
+          <div class="form-group" style="flex:0 0 auto;display:flex;align-items:flex-end;">
+            <button type="button" class="btn btn-sm" onclick="randomPort('s5Port')"><i class="iconfont icon-ziyuan"></i></button>
           </div>
         </div>
       </div>`;
@@ -784,6 +816,25 @@ function generateScripts() {
     }
 
     /**
+     * 随机选择 CFIP 优选域名
+     */
+    function randomCFIP() {
+      const cfipList = [
+        'mfa.gov.ua',
+        'saas.sin.fanstore.ubi.com',
+        'cf.130519.xyz',
+        'cf.008500.xyz',
+        'cf.090227.xyz',
+        'cf.877774.xyz',
+        'sub.danfeng.eu.org',
+        'cf.zhetengsha.eu.org'
+      ];
+      const randomIndex = Math.floor(Math.random() * cfipList.length);
+      document.getElementById('cfip').value = cfipList[randomIndex];
+      updateFilledState();
+    }
+
+    /**
      * 清理 Argo Auth 输入，移除多余的命令前缀
      * @param {HTMLInputElement} input - 输入框元素
      */
@@ -808,12 +859,15 @@ function generateScripts() {
         { id: 'uuid', key: 'UUID' },
         { id: 'cfip', key: 'CFIP' },
         { id: 'cfport', key: 'CFPORT' },
+        { id: 'anytlsPort', key: 'ANYTLS_PORT' },
+        { id: 'anyrealityPort', key: 'ANYREALITY_PORT' },
         { id: 'argoPort', key: 'ARGO_PORT' },
         { id: 'argoDomain', key: 'ARGO_DOMAIN' },
         { id: 'argoAuth', key: 'ARGO_AUTH' },
         { id: 'hy2Port', key: 'HY2_PORT' },
         { id: 'realityPort', key: 'REALITY_PORT' },
         { id: 'tuicPort', key: 'TUIC_PORT' },
+        { id: 's5Port', key: 'S5_PORT' },
         { id: 'nezhaServer', key: 'NEZHA_SERVER' },
         { id: 'nezhaPort', key: 'NEZHA_PORT' },
         { id: 'nezhaKey', key: 'NEZHA_KEY' },
@@ -906,9 +960,10 @@ function generateScripts() {
       // 所有输入框 ID 列表
       const inputs = [
         'name', 'uuid', 'cfip', 'cfport', 
+        'anytlsPort', 'anyrealityPort',
         'nezhaServer', 'nezhaPort', 'nezhaKey', 
         'argoPort', 'argoDomain', 'argoAuth', 
-        'hy2Port', 'realityPort', 'tuicPort',
+        'hy2Port', 'realityPort', 'tuicPort', 's5Port',
         'chatId', 'botToken', 'uploadUrl'
       ];
       
