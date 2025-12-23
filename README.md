@@ -1,5 +1,12 @@
 # eooce老王小钢炮可视化界面
 
+<details>
+    <summary>更新日志</summary>
+    ☑️2025-12-23 <br>
+    1.老王新增Socks5节点 <br>
+    2.老王新增AnyTls节点配置 <br>
+</details>
+
 小钢炮核心脚本作者是`老王eooce`，此项目只是将老王小钢炮做成了可视化界面，方便使用，有需求的可以自行修改。 <br>
 
 Github地址：https://github.com/eooce <br>
